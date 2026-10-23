@@ -70,24 +70,43 @@ Co na serveru je navíc a **v repu není** (záměrně):
   Seznam subdomén lze měnit jednou týdně (další změna po 30. 10. 2026).
 - DKIM pro SMTP i PHP mail() aktivní. AwStats: http://stats.mirekstrnad.eu.
 
-## HTTPS — postup
+## HTTPS — stav
 
-1. ✅ SSL zdarma zapnuto 23. 10. 2026 (viz výše). Zkontrolovat
-   https://mirekstrnad.eu po ~24 h.
-2. Po vydání certifikátu v `site/.htaccess` odkomentovat blok
-   `RewriteRule … https://` a řádek `Strict-Transport-Security`
-   (první týden `max-age=300`, pak `31536000`).
-3. Commit → deploy → ověřit `https://mirekstrnad.eu`, redirect z `http://`,
-   securityheaders.com.
+✅ Hotovo 23. 10. 2026: certifikát vydán během minut po zapnutí, HTTP/2 funguje.
+`.htaccess` přesměrovává `http://` i `www.` na `https://mirekstrnad.eu` (301)
+a posílá HSTS `max-age=86400`. securityheaders.com: **A**.
 
-Bez HTTPS web od Chrome 154 zobrazí varování před vstupem.
+**Úkol cca v lednu 2027:** ověřit, že se certifikát automaticky obnovil
+(Let's Encrypt platí 90 dní), a pak zvýšit HSTS na `max-age=31536000`.
+
+## Stav nasazení (23. 10. 2026, večer)
+
+- Nový web je živý: https://mirekstrnad.eu — 3 deploye přes GitHub Actions,
+  všechny přes **FTPS** (hosting TLS umí, fallback nebyl potřeba).
+- Kořen FTP účtu `mirekstrnad_eu_mirek` obsahuje složku `mirekstrnad.eu/`
+  (= web root). První deploy šel omylem do kořene FTP — **28 souborů tam
+  zbylo a je třeba je ručně smazat ve FileZille**: `.htaccess`,
+  `.ftp-deploy-sync-state.json`, `apple-touch-icon.png`, `favicon.ico`,
+  `favicon.svg`, `google35b1cd082a048599.html`, `index.html`, `robots.txt`,
+  `sitemap.xml`, složky `design/` a `fonts/` (vše v kořeni, NE v
+  `mirekstrnad.eu/`).
+- V `mirekstrnad.eu/` zůstaly staré nepoužívané soubory — lze smazat:
+  `inc/`, `font-awesome/`, `design/bg.jpg`, `design/photo.jpg`,
+  `design/pattern.png`, `novaves/` (Flash). Originály obrázků si nejdřív
+  zálohovat (jsou i v `~/Downloads/mirekstrnad.eu`).
+- Odkazy na profily ověřeny: X ✅, Facebook ✅, Flickr ✅;
+  **LinkedIn `/in/mirekstrnad/` neověřeno** (authwall) — zkontrolovat.
+- Na doméně **nejsou žádné e-mailové schránky** (Administrace → Emaily je
+  prázdné); MX/SPF/DKIM existují, ale nic je nepoužívá. Případný přesun
+  hostingu tedy poštu neohrozí.
 
 ## DNS a pošta
 
 `MX 10 mail.gigaserver.cz`, SPF `v=spf1 mx a include:smtp-gw.gigaserver.cz ~all`.
-DMARC chybí (`_dmarc` je jen wildcard CNAME) — doporučeno přidat
-`_dmarc TXT "v=DMARC1; p=none; rua=mailto:strnad.mirek@me.com"`.
-Při jakékoli změně hostingu nebo NS zachovat MX + SPF.
+DMARC chybí (`_dmarc` padá do wildcard CNAME). Protože doména žádnou poštu
+neposílá, přidat v Administrace → DNS záznam:
+`_dmarc` · TXT · `v=DMARC1; p=reject` (zabrání falšování odesílatele
+`@mirekstrnad.eu`). Wildcard `*.mirekstrnad.eu CNAME` zůstává.
 
 ## Generování obrázků
 

@@ -5,7 +5,7 @@ Osobní web Miroslava Strnada — jednostránková statická vizitka
 
 | | |
 |---|---|
-| Web | https://mirekstrnad.eu (HTTPS po zapnutí certifikátu u hostingu) |
+| Web | https://mirekstrnad.eu (Let's Encrypt, HTTP/2, securityheaders.com A) |
 | Hosting | webhosting Gigaserver (DNS, pošta i web), nasazení přes FTP z GitHub Actions |
 | Stack | jedno HTML s inline CSS, self-hostovaný Open Sans (woff2), inline SVG ikony; žádný JavaScript, žádný build |
 

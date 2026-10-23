@@ -31,6 +31,6 @@ vizitka „Digital / UX / PM“ s kontaktem a odkazy na sociální sítě.
 
 ## Stav (23. 10. 2026)
 
-HTTPS zatím nefunguje — čeká na zapnutí Let's Encrypt u hostingu, pak
-odkomentovat redirect a HSTS v `site/.htaccess`. Postup a vše ostatní:
-`docs/wiki/03-provoz.md`; review původního webu: `docs/wiki/02-review.md`.
+Web běží na https://mirekstrnad.eu (Let's Encrypt, HTTP/2, HSTS, CSP),
+nasazuje se automaticky z `master`. Provoz: `docs/wiki/03-provoz.md`;
+review původního webu: `docs/wiki/02-review.md`.
