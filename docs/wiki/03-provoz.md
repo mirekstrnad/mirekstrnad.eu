@@ -94,8 +94,8 @@ a posílá HSTS `max-age=86400`. securityheaders.com: **A**.
   `inc/`, `font-awesome/`, `design/bg.jpg`, `design/photo.jpg`,
   `design/pattern.png`, `novaves/` (Flash). Originály obrázků si nejdřív
   zálohovat (jsou i v `~/Downloads/mirekstrnad.eu`).
-- Odkazy na profily ověřeny: X ✅, Facebook ✅, Flickr ✅;
-  **LinkedIn `/in/mirekstrnad/` neověřeno** (authwall) — zkontrolovat.
+- Odkazy na profily ověřeny: X ✅, Facebook ✅, Flickr ✅, LinkedIn ✅
+  (`/in/mirekstrnad/` potvrdil majitel).
 - Na doméně **nejsou žádné e-mailové schránky** (Administrace → Emaily je
   prázdné); MX/SPF/DKIM existují, ale nic je nepoužívá. Případný přesun
   hostingu tedy poštu neohrozí.
