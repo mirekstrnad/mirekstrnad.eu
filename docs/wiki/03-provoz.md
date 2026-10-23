@@ -103,10 +103,13 @@ a posílá HSTS `max-age=86400`. securityheaders.com: **A**.
 ## DNS a pošta
 
 `MX 10 mail.gigaserver.cz`, SPF `v=spf1 mx a include:smtp-gw.gigaserver.cz ~all`.
-DMARC chybí (`_dmarc` padá do wildcard CNAME). Protože doména žádnou poštu
-neposílá, přidat v Administrace → DNS záznam:
-`_dmarc` · TXT · `v=DMARC1; p=reject` (zabrání falšování odesílatele
-`@mirekstrnad.eu`). Wildcard `*.mirekstrnad.eu CNAME` zůstává.
+DMARC: 23. 10. 2026 přidán záznam `_dmarc` · TXT · `v=DMARC1; p=reject`
+(doména žádnou poštu neposílá — žádné schránky — takže reject je bezpečný
+a zabrání falšování odesílatele `@mirekstrnad.eu`). Wildcard
+`*.mirekstrnad.eu CNAME` zůstává. Pozn.: tlačítko ➕ v Administrace → DNS
+otevírá JS `confirm()`, který blokuje automatizovaný prohlížeč — záznam byl
+odeslán voláním `pridatDNS()`; session legacy administrace vyprší po pár
+minutách nečinnosti (znovu přes klientská sekce → Administrace).
 
 ## Generování obrázků
 
