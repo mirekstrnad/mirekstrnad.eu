@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>text{font:300 34px "Open Sans",system-ui,sans-serif;fill:#fff}rect{fill:#07548c}@media(prefers-color-scheme:dark){rect{fill:#7fb6e6}text{fill:#111}}</style>
+  <rect width="64" height="64" rx="12"/>
+  <text x="32" y="44" text-anchor="middle">MS</text>
+</svg>

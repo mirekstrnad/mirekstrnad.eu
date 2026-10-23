@@ -1,0 +1,44 @@
+# Nasazení složky site/ na FTP hosting při každém push do master.
+# Secrets (Settings → Secrets and variables → Actions → Secrets):
+#   FTP_HOST, FTP_USER, FTP_PASSWORD
+# Variables (tamtéž → Variables, nepovinné):
+#   FTP_SERVER_DIR  – složka webu na serveru, výchozí "/"
+#   FTP_PROTOCOL    – ftps (výchozí) nebo ftp, pokud hosting FTPS neumí
+name: Deploy to FTP
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "site/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy site/ to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: site/
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/' }}
+          # nikdy nemazat, co na serveru není v repu (novaves/, staré soubory)
+          dangerous-clean-slate: false
+          exclude: |
+            **/.DS_Store
+            **/.git*

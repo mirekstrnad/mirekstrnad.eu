@@ -1,69 +1,67 @@
 # mirekstrnad.eu
 
 Osobní web Miroslava Strnada — jednostránková statická vizitka
-„Miroslav Strnad · Digital / UX / PM“ s kontaktem a odkazy na sociální sítě.
+„Miroslav Strnad · Digital / UX / PM“ s kontaktem a odkazy na profily.
 
 | | |
 |---|---|
-| Web | http://mirekstrnad.eu (zatím jen HTTP) |
-| Hosting | webhosting Gigaserver (DNS `*.ns.gigaserver.cz`), nasazení přes FTP mimo tento repozitář |
-| Stack | statické HTML + 2× CSS, Font Awesome 4.1, Open Sans (Google Fonts); žádný JavaScript, žádný build |
-| Poslední změna webu | leden 2015 |
+| Web | https://mirekstrnad.eu (HTTPS po zapnutí certifikátu u hostingu) |
+| Hosting | webhosting Gigaserver (DNS, pošta i web), nasazení přes FTP z GitHub Actions |
+| Stack | jedno HTML s inline CSS, self-hostovaný Open Sans (woff2), inline SVG ikony; žádný JavaScript, žádný build |
 
-## Co je v repozitáři
-
-Repozitář **neobsahuje zdrojové soubory webu** — jen dokumentaci.
+## Struktura repozitáře
 
 ```
-AGENTS.md              vstup pro AI modely a agenty (co projekt je, co nedělat)
-README.md              tento soubor
-docs/wiki/             export z domácí wiki (BookStack); zdroj pravdy je wiki
-  01-prehled.md        co web je, stav repozitáře, omezení, historie
-  02-review.md         kompletní review webu (kód, design, přístupnost,
-                       kompatibilita, rychlost, bezpečnost) + doporučení
+site/                      zdroj webu – přesně to, co se nahrává na hosting
+  index.html               stránka (HTML + inline CSS + SVG ikony)
+  .htaccess                security headers, cache, gzip, MIME typy
+  design/                  bg-{1280,1920,2560}.{avif,webp,jpg}, photo.{avif,webp,jpg}, og.jpg
+  fonts/                   Open Sans 300/400, latin + latin-ext (SIL OFL)
+  favicon.svg, favicon.ico, apple-touch-icon.png
+  robots.txt, sitemap.xml
+  google35b1cd082a048599.html   ověření Google Search Console – nemazat
+.github/workflows/deploy.yml   push do master → FTP deploy složky site/
+docs/wiki/                 dokumentace (export z domácí wiki): přehled, review, provoz
+AGENTS.md                  vstup pro AI modely a agenty
 ```
 
-Změny v repozitáři se na webu **neprojeví**. Pokud se má web spravovat z gitu,
-je potřeba nejdřív stáhnout stávající soubory z hostingu a zavést nasazení
-(viz doporučení v review).
+## Nasazení
 
-## Struktura webu (podle živé stránky)
+Každý push do `master`, který změní `site/`, spustí workflow **Deploy to FTP**
+([SamKirkland/FTP-Deploy-Action](https://github.com/SamKirkland/FTP-Deploy-Action)).
+Nahrávají se jen změněné soubory; **nic se na serveru nemaže**
+(`dangerous-clean-slate: false`), takže staré soubory (`inc/`, `font-awesome/`,
+`novaves/`) zůstávají, dokud je někdo neodstraní ručně.
+
+Nastavení v GitHubu (Settings → Secrets and variables → Actions):
+
+| Typ | Název | Hodnota |
+|---|---|---|
+| Secret | `FTP_HOST` | FTP server z administrace Gigaserveru |
+| Secret | `FTP_USER` | FTP uživatel |
+| Secret | `FTP_PASSWORD` | FTP heslo |
+| Variable | `FTP_SERVER_DIR` | složka webu na serveru, výchozí `/` (např. `/www/`) |
+| Variable | `FTP_PROTOCOL` | `ftps` (výchozí) nebo `ftp`, pokud hosting FTPS neumí |
+
+Ruční spuštění: Actions → Deploy to FTP → Run workflow.
+
+## Lokální náhled
 
 ```
-/index.html                        ~2 kB, lang="cs"
-/inc/main.css                      desktop layout (karta absolutně vlevo dole)
-/inc/mobile.css                    @media (max-width: 767px)
-/font-awesome/                     Font Awesome 4.1.0 (css + fonts)
-/design/bg.jpg                     pozadí, 403 kB
-/design/photo.jpg                  portrét v kartě (CSS background), 83 kB
-/design/pattern.png                překryvný vzor, 1 kB
+cd site && python3 -m http.server 8000   # http://localhost:8000
 ```
 
-## Stav a doporučení (zkráceně)
+## Jak dělat změny
 
-Podrobně v [docs/wiki/02-review.md](docs/wiki/02-review.md).
+1. Upravit `site/index.html` (vše je v jednom souboru).
+2. Obrázky: originál `bg.jpg` (5184×3456) a `photo.jpg` (299×339) nejsou v repu
+   (jsou na hostingu / u majitele); varianty v `design/` se generují Pillow
+   (AVIF q50, WebP q70, JPEG q72) — postup v `docs/wiki/03-provoz.md`.
+3. Commit do větve → PR → merge do `master` → automatické nasazení.
 
-1. **Zapnout HTTPS** — web je jen na `http://`; moderní prohlížeče (Chrome
-   s režimem „Always Use Secure Connections“) stránku vůbec nezobrazí nebo
-   varují. Zároveň opravit `http://fonts.googleapis.com` (po přechodu na
-   HTTPS by jinak šlo o mixed content a písmo by se nenačetlo).
-2. **Dostat zdroj do gitu** — jediná kopie je na FTP hostingu.
-3. **Opravit layout karty** — fixní `height: 339px; overflow: hidden`
-   ořezává obsah při zoomu, fallback fontu nebo delším textu; na mobilu
-   `padding-bottom: 700px` tlačí fotku pod ohyb.
-4. **Přístupnost** — `maximum-scale=1.0` blokuje zoom, portrét jen jako CSS
-   pozadí (bez `alt`), ikony bez `aria-hidden`, dotykové cíle ~20 px.
-5. **Rychlost** — ~600 kB přenosu, z toho 403 kB `bg.jpg`; Font Awesome
-   (105 kB) kvůli 6 ikonám → inline SVG; obrázky do WebP/AVIF.
-6. **Obsah** — odkazy na profily pravděpodobně neplatné
-   (`linkedin.com/mirekstrnad/` bez `/in/`, `flickr.com/mirekstrnad/` bez
-   `/photos/`, Twitter → X); ověřit a opravit.
+## Dokumentace
 
-## Jak s repozitářem pracovat
-
-- Dokumentace se píše v BookStack wiki a exportuje do `docs/wiki/`
-  (formát: YAML frontmatter `title / source / exported / language`, pak Markdown).
-- AI agenti: nejdřív [AGENTS.md](AGENTS.md).
-- Nezakládat build ani nasazení (GitHub Pages, Cloudflare Pages), dokud o to
-  majitel výslovně nepožádá — kolidovalo by to s doménou na hostingu.
-- Do repa nepatří přístupy k hostingu ani jiná tajemství.
+- [docs/wiki/01-prehled.md](docs/wiki/01-prehled.md) — co web je, historie
+- [docs/wiki/02-review.md](docs/wiki/02-review.md) — review původního webu (10/2026) a doporučení
+- [docs/wiki/03-provoz.md](docs/wiki/03-provoz.md) — co se změnilo při přepisu, nasazení, HTTPS, údržba
+- [AGENTS.md](AGENTS.md) — pokyny pro AI agenty
