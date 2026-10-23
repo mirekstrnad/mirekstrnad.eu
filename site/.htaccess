@@ -5,16 +5,22 @@ Options -Indexes
 DirectoryIndex index.html
 AddDefaultCharset utf-8
 
-# --- HTTPS redirect: ODKOMENTOVAT až po vydání certifikátu (Let's Encrypt) ---
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} !=on
-#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-# </IfModule>
+# --- Kanonická adresa: https://mirekstrnad.eu (bez www) ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # http -> https (i za případnou TLS proxy)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://mirekstrnad.eu%{REQUEST_URI} [R=301,L]
+  # www -> bez www
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://mirekstrnad.eu%{REQUEST_URI} [R=301,L]
+</IfModule>
 
 <IfModule mod_headers.c>
-  # HSTS: zapnout až s HTTPS; první týden max-age=300, pak 31536000
-  # Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+  # HSTS: zatím 1 den; po ověření, že obnova certifikátu funguje (cca 3 měsíce),
+  # zvýšit na 31536000
+  Header always set Strict-Transport-Security "max-age=86400"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
