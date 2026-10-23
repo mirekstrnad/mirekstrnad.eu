@@ -84,12 +84,8 @@ a posílá HSTS `max-age=86400`. securityheaders.com: **A**.
 - Nový web je živý: https://mirekstrnad.eu — 3 deploye přes GitHub Actions,
   všechny přes **FTPS** (hosting TLS umí, fallback nebyl potřeba).
 - Kořen FTP účtu `mirekstrnad_eu_mirek` obsahuje složku `mirekstrnad.eu/`
-  (= web root). První deploy šel omylem do kořene FTP — **28 souborů tam
-  zbylo a je třeba je ručně smazat ve FileZille**: `.htaccess`,
-  `.ftp-deploy-sync-state.json`, `apple-touch-icon.png`, `favicon.ico`,
-  `favicon.svg`, `google35b1cd082a048599.html`, `index.html`, `robots.txt`,
-  `sitemap.xml`, složky `design/` a `fonts/` (vše v kořeni, NE v
-  `mirekstrnad.eu/`).
+  (= web root). První deploy šel omylem do kořene FTP; omylem nahrané
+  soubory majitel 23. 10. 2026 ručně smazal.
 - V `mirekstrnad.eu/` zůstaly staré nepoužívané soubory — lze smazat:
   `inc/`, `font-awesome/`, `design/bg.jpg`, `design/photo.jpg`,
   `design/pattern.png`, `novaves/` (Flash). Originály obrázků si nejdřív
