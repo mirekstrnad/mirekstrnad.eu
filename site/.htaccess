@@ -1,0 +1,44 @@
+# mirekstrnad.eu – Apache (sdílený hosting). Bloky v <IfModule> nic nerozbijí,
+# když modul chybí.
+
+Options -Indexes
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+
+# --- HTTPS redirect: ODKOMENTOVAT až po vydání certifikátu (Let's Encrypt) ---
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} !=on
+#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# </IfModule>
+
+<IfModule mod_headers.c>
+  # HSTS: zapnout až s HTTPS; první týden max-age=300, pak 31536000
+  # Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set X-Frame-Options "DENY"
+  Header always set Content-Security-Policy "default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+  Header unset X-Powered-By
+
+  <FilesMatch "\.(avif|webp|jpe?g|png|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(html?|xml|txt)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml image/svg+xml
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType image/svg+xml .svg
+</IfModule>
+
+FileETag MTime Size
