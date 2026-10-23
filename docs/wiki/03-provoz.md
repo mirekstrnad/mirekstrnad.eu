@@ -51,10 +51,28 @@ Co na serveru je navíc a **v repu není** (záměrně):
 - originály `design/bg.jpg` (5184×3456, 403 kB) a `design/photo.jpg` (299×339,
   83 kB) — v repu jsou jen optimalizované varianty; originály si nech u sebe.
 
+## Hosting — zjištěno v administraci (23. 10. 2026)
+
+- Klientská sekce: https://admin.gigaserver.cz (fakturace, služby), technická
+  správa: **Administrace** → https://admin-legacy.gigaserver.cz/uzivatel/
+- Služba #4406 `mirekstrnad.eu`, tarif Praktik, 150 Kč/rok, zaplaceno do
+  4. 12. 2026, auto-prodloužení **Ne** (hlídat!). Kvóta FTP+DB 100 MB
+  (využito 26 MB). Na stejném účtu i `strnadmirek.eu` a `danielastrnadova.cz`.
+- FTP: `ftp.mirekstrnad.eu`, port 21 (záložní `185.66.36.178`), složka webu
+  `/www/mirekstrnad.eu` = kořen FTP účtu; účty `mirekstrnad_eu`,
+  `mirekstrnad_eu_mirek` (2 z 5). Web-FTP: webftp.gigaserver.cz (server WH50).
+  FTPS hosting nedokumentuje — deploy workflow má automatický fallback na FTP.
+  Zálohy FTP se dělají v neděli (obnova v administraci → FTP).
+- **SSL zdarma** (Let's Encrypt) je v Administrace → Ostatní → „SSL zdarma“.
+  23. 10. 2026 zapnuto („Vygenerovat a nainstalovat“, bez subdomén — hlavní
+  doména + www jsou vždy); stav „Čeká na vygenerování“, hotovo do 24 h.
+  Seznam subdomén lze měnit jednou týdně (další změna po 30. 10. 2026).
+- DKIM pro SMTP i PHP mail() aktivní. AwStats: http://stats.mirekstrnad.eu.
+
 ## HTTPS — postup
 
-1. Administrace Gigaserveru → SSL / Let's Encrypt pro `mirekstrnad.eu` a
-   `www.mirekstrnad.eu`. Ověřit, že je zdarma (web to výslovně neříká).
+1. ✅ SSL zdarma zapnuto 23. 10. 2026 (viz výše). Zkontrolovat
+   https://mirekstrnad.eu po ~24 h.
 2. Po vydání certifikátu v `site/.htaccess` odkomentovat blok
    `RewriteRule … https://` a řádek `Strict-Transport-Security`
    (první týden `max-age=300`, pak `31536000`).

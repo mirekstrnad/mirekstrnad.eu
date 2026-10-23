@@ -37,11 +37,12 @@ Nastavení v GitHubu (Settings → Secrets and variables → Actions):
 
 | Typ | Název | Hodnota |
 |---|---|---|
-| Secret | `FTP_HOST` | FTP server z administrace Gigaserveru |
-| Secret | `FTP_USER` | FTP uživatel |
-| Secret | `FTP_PASSWORD` | FTP heslo |
-| Variable | `FTP_SERVER_DIR` | složka webu na serveru, výchozí `/` (např. `/www/`) |
-| Variable | `FTP_PROTOCOL` | `ftps` (výchozí) nebo `ftp`, pokud hosting FTPS neumí |
+| Secret | `FTP_USER` | FTP účet (vytvořit samostatný v administraci Gigaserveru → FTP, složka `/www/mirekstrnad.eu/`) |
+| Secret | `FTP_PASSWORD` | jeho heslo |
+| Variable | `FTP_HOST` | nepovinné, výchozí `ftp.mirekstrnad.eu` |
+| Variable | `FTP_SERVER_DIR` | nepovinné, výchozí `/` (kořen FTP účtu = `/www/mirekstrnad.eu`) |
+
+Workflow zkusí FTPS; když hosting TLS neumí, automaticky použije FTP.
 
 Ruční spuštění: Actions → Deploy to FTP → Run workflow.
 

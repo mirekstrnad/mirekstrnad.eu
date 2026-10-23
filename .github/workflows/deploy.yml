@@ -1,9 +1,13 @@
-# Nasazení složky site/ na FTP hosting při každém push do master.
+# Nasazení složky site/ na FTP hosting Gigaserver při každém push do master.
+#
 # Secrets (Settings → Secrets and variables → Actions → Secrets):
-#   FTP_HOST, FTP_USER, FTP_PASSWORD
+#   FTP_USER      – FTP účet (doporučeno samostatný, např. mirekstrnad_eu_deploy)
+#   FTP_PASSWORD  – jeho heslo
 # Variables (tamtéž → Variables, nepovinné):
-#   FTP_SERVER_DIR  – složka webu na serveru, výchozí "/"
-#   FTP_PROTOCOL    – ftps (výchozí) nebo ftp, pokud hosting FTPS neumí
+#   FTP_HOST        – výchozí ftp.mirekstrnad.eu (záložní 185.66.36.178)
+#   FTP_SERVER_DIR  – výchozí "/" (kořen FTP účtu = /www/mirekstrnad.eu)
+#
+# Nejdřív se zkusí FTPS (šifrované); když server TLS neumí, použije se FTP.
 name: Deploy to FTP
 
 on:
@@ -24,20 +28,39 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      FTP_HOST: ${{ vars.FTP_HOST || 'ftp.mirekstrnad.eu' }}
+      FTP_SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '/' }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy site/ to FTP
+      - name: Deploy site/ (FTPS)
+        id: ftps
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}
+          server: ${{ env.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          protocol: ftps
           local-dir: site/
-          server-dir: ${{ vars.FTP_SERVER_DIR || '/' }}
-          # nikdy nemazat, co na serveru není v repu (novaves/, staré soubory)
+          server-dir: ${{ env.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.DS_Store
+            **/.git*
+
+      - name: Deploy site/ (FTP fallback)
+        if: steps.ftps.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ env.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          local-dir: site/
+          server-dir: ${{ env.FTP_SERVER_DIR }}
           dangerous-clean-slate: false
           exclude: |
             **/.DS_Store
