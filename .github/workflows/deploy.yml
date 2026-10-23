@@ -1,9 +1,9 @@
 # Nasazení složky site/ na FTP hosting Gigaserver při každém push do master.
 #
 # Secrets (Settings → Secrets and variables → Actions → Secrets):
-#   FTP_USER      – FTP účet (doporučeno samostatný, např. mirekstrnad_eu_deploy)
-#   FTP_PASSWORD  – jeho heslo
+#   FTP_PASSWORD  – heslo FTP účtu
 # Variables (tamtéž → Variables, nepovinné):
+#   FTP_USER        – výchozí mirekstrnad_eu_mirek
 #   FTP_HOST        – výchozí ftp.mirekstrnad.eu (záložní 185.66.36.178)
 #   FTP_SERVER_DIR  – výchozí "/" (kořen FTP účtu = /www/mirekstrnad.eu)
 #
@@ -31,6 +31,7 @@ jobs:
     timeout-minutes: 15
     env:
       FTP_HOST: ${{ vars.FTP_HOST || 'ftp.mirekstrnad.eu' }}
+      FTP_USER: ${{ vars.FTP_USER || 'mirekstrnad_eu_mirek' }}
       FTP_SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '/' }}
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +42,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ env.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
+          username: ${{ env.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: site/
@@ -56,7 +57,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ env.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
+          username: ${{ env.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           local-dir: site/
