@@ -1,6 +1,8 @@
 # AGENTS.md — mirekstrnad.eu
 
-Vstup pro AI modely a agenty. Podrobnosti: [docs/wiki/README.md](docs/wiki/README.md).
+Vstup pro AI modely a agenty. Podrobnosti: [docs/wiki/README.md](docs/wiki/README.md),
+přehled pro lidi: [README.md](README.md), review a doporučení:
+[docs/wiki/02-review.md](docs/wiki/02-review.md).
 
 ## Co projekt je
 
@@ -21,3 +23,9 @@ vizitka „Digital / UX / PM“ s kontaktem a odkazy na sociální sítě.
 - Nezakládat build ani nasazení (GitHub Pages, Cloudflare Pages), dokud o to
   majitel výslovně nepožádá — mohlo by to kolidovat s doménou na hostingu.
 - Nedávat do repa přístupy k hostingu ani jiná tajemství.
+
+## Známý stav webu (23. 10. 2026)
+
+Web je jen na HTTP (HTTPS nefunguje), zdroj je pouze na FTP hostingu
+Gigaserver, na doméně je pošta (MX/SPF u Gigaserveru) — každý návrh změny
+DNS/hostingu to musí zachovat. Nálezy a plán oprav: `docs/wiki/02-review.md`.
