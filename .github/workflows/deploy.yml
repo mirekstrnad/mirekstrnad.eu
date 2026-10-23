@@ -5,7 +5,7 @@
 # Variables (tamtéž → Variables, nepovinné):
 #   FTP_USER        – výchozí mirekstrnad_eu_mirek
 #   FTP_HOST        – výchozí ftp.mirekstrnad.eu (záložní 185.66.36.178)
-#   FTP_SERVER_DIR  – výchozí "/" (kořen FTP účtu = /www/mirekstrnad.eu)
+#   FTP_SERVER_DIR  – výchozí "/mirekstrnad.eu/" (složka webu v kořeni FTP účtu)
 #
 # Nejdřív se zkusí FTPS (šifrované); když server TLS neumí, použije se FTP.
 name: Deploy to FTP
@@ -32,7 +32,7 @@ jobs:
     env:
       FTP_HOST: ${{ vars.FTP_HOST || 'ftp.mirekstrnad.eu' }}
       FTP_USER: ${{ vars.FTP_USER || 'mirekstrnad_eu_mirek' }}
-      FTP_SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '/' }}
+      FTP_SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '/mirekstrnad.eu/' }}
     steps:
       - uses: actions/checkout@v4
 

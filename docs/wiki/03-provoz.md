@@ -59,7 +59,8 @@ Co na serveru je navíc a **v repu není** (záměrně):
   4. 12. 2026, auto-prodloužení **Ne** (hlídat!). Kvóta FTP+DB 100 MB
   (využito 26 MB). Na stejném účtu i `strnadmirek.eu` a `danielastrnadova.cz`.
 - FTP: `ftp.mirekstrnad.eu`, port 21 (záložní `185.66.36.178`), složka webu
-  `/www/mirekstrnad.eu` = kořen FTP účtu; účty `mirekstrnad_eu`,
+  je v administraci uvedená jako `/www/mirekstrnad.eu`, ale z pohledu FTP účtu
+  `mirekstrnad_eu_mirek` je to `/mirekstrnad.eu/` (kořen účtu je o úroveň výš); účty `mirekstrnad_eu`,
   `mirekstrnad_eu_mirek` (2 z 5). Web-FTP: webftp.gigaserver.cz (server WH50).
   FTPS hosting nedokumentuje — deploy workflow má automatický fallback na FTP.
   Zálohy FTP se dělají v neděli (obnova v administraci → FTP).

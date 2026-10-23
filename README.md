@@ -40,7 +40,7 @@ Nastavení v GitHubu (Settings → Secrets and variables → Actions):
 | Secret | `FTP_PASSWORD` | heslo FTP účtu |
 | Variable | `FTP_USER` | nepovinné, výchozí `mirekstrnad_eu_mirek` |
 | Variable | `FTP_HOST` | nepovinné, výchozí `ftp.mirekstrnad.eu` |
-| Variable | `FTP_SERVER_DIR` | nepovinné, výchozí `/` (kořen FTP účtu = `/www/mirekstrnad.eu`) |
+| Variable | `FTP_SERVER_DIR` | nepovinné, výchozí `/mirekstrnad.eu/` (složka webu v kořeni FTP účtu) |
 
 Workflow zkusí FTPS; když hosting TLS neumí, automaticky použije FTP.
 
